@@ -13,6 +13,7 @@ import os
 import re
 import warnings
 import weakref
+import mmap
 
 from enum import EnumMeta
 from enum import IntEnum
@@ -185,6 +186,8 @@ class Armorable(six.with_metaclass(abc.ABCMeta)):
             obj = cls()
             data = bytearray(os.path.getsize(filename))
             file.readinto(data)
+            m = mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ)
+            data = bytearray(m)
 
         po = obj.parse(data)
 
